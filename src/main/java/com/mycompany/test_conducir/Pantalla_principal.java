@@ -40,14 +40,7 @@ public class Pantalla_principal extends javax.swing.JFrame {
         anterior.setEnabled(true);
         labelPreguntasResp.setText("Pregunta: " + (num + 1) + "/" + preguntas.size());
         try{
-            if(opcionA.isSelected())
-                preguntaActual.setRespuestaMarcada(1);
-            else if(opcionB.isSelected())
-                preguntaActual.setRespuestaMarcada(2);
-            else if(opcionC.isSelected())
-                preguntaActual.setRespuestaMarcada(3);
-            else if(opcionD.isSelected())
-                preguntaActual.setRespuestaMarcada(4);
+            
             System.out.println(preguntaActual.getRespuestaMarcada());
         }
         
@@ -67,14 +60,14 @@ public class Pantalla_principal extends javax.swing.JFrame {
         opcionD.setText("<html>"+preguntaActual.getR4().getRespuesta()+"</html>");
         
         //Borrar despues
-        if(preguntaActual.getR1().isCorrecta())
-            opcionA.setSelected(true);
-        else if(preguntaActual.getR2().isCorrecta())
-            opcionB.setSelected(true);
-        else if(preguntaActual.getR3().isCorrecta())
-            opcionC.setSelected(true);
-        else if(preguntaActual.getR4().isCorrecta())
-            opcionD.setSelected(true);
+//        if(preguntaActual.getR1().isCorrecta())
+//            opcionA.setSelected(true);
+//        else if(preguntaActual.getR2().isCorrecta())
+//            opcionB.setSelected(true);
+//        else if(preguntaActual.getR3().isCorrecta())
+//            opcionC.setSelected(true);
+//        else if(preguntaActual.getR4().isCorrecta())
+//            opcionD.setSelected(true);
         if(numeroPregunta == 29 || numeroPregunta + 1 == preguntas.size())
             siguiente.setText("Finalizar");
         else if(numeroPregunta == 0)
@@ -135,13 +128,13 @@ public class Pantalla_principal extends javax.swing.JFrame {
         confirmarSalida = new javax.swing.JButton();
         rechazarSalida = new javax.swing.JButton();
         preguntaPanel = new javax.swing.JPanel();
+        imagenLabel = new javax.swing.JLabel(imageIcon);
         preguntaLabel = new javax.swing.JLabel();
         respuestasPanel = new javax.swing.JPanel();
         opcionA = new javax.swing.JRadioButton();
         opcionB = new javax.swing.JRadioButton();
         opcionC = new javax.swing.JRadioButton();
         opcionD = new javax.swing.JRadioButton();
-        imagenLabel = new javax.swing.JLabel(imageIcon);
         siguiente = new javax.swing.JButton();
         botonSalida = new javax.swing.JButton();
         labelPreguntasResp = new javax.swing.JLabel();
@@ -199,6 +192,11 @@ public class Pantalla_principal extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(1600, 900));
+        setPreferredSize(new java.awt.Dimension(1600, 900));
+
+        imagenLabel.setBounds(30,30,100,100);
+        imagenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/senal.png"))); // NOI18N
 
         preguntaLabel.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         preguntaLabel.setText("Esto es una pregunta, respondeme");
@@ -250,24 +248,32 @@ public class Pantalla_principal extends javax.swing.JFrame {
         preguntaPanel.setLayout(preguntaPanelLayout);
         preguntaPanelLayout.setHorizontalGroup(
             preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(preguntaPanelLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, preguntaPanelLayout.createSequentialGroup()
+                .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(preguntaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
-                    .addComponent(respuestasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addGroup(preguntaPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(respuestasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(preguntaPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         preguntaPanelLayout.setVerticalGroup(
             preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(preguntaPanelLayout.createSequentialGroup()
-                .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(respuestasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                .addGroup(preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(preguntaPanelLayout.createSequentialGroup()
+                        .addGap(83, 83, 83)
+                        .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(respuestasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE))
+                    .addGroup(preguntaPanelLayout.createSequentialGroup()
+                        .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-
-        imagenLabel.setBounds(30,30,100,100);
-        imagenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/senal.png"))); // NOI18N
 
         siguiente.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         siguiente.setText("Siguiente");
@@ -300,22 +306,17 @@ public class Pantalla_principal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(preguntaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(imagenLabel)
                             .addComponent(botonSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(siguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(preguntaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(labelPreguntasResp, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1208, Short.MAX_VALUE)
+                        .addComponent(labelPreguntasResp, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(anterior, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -323,19 +324,13 @@ public class Pantalla_principal extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addComponent(preguntaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(69, 69, 69))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(siguiente)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(anterior)
-                        .addGap(3, 3, 3)))
+                .addContainerGap()
+                .addComponent(preguntaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(siguiente)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(anterior)
+                .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonSalida)
                     .addComponent(labelPreguntasResp))
@@ -388,21 +383,25 @@ public class Pantalla_principal extends javax.swing.JFrame {
     }//GEN-LAST:event_anteriorActionPerformed
 
     private void opcionAStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_opcionAStateChanged
-        //if(opcionA.isEnabled())
+        if(opcionA.isSelected())
+                preguntaActual.setRespuestaMarcada(1);
     }//GEN-LAST:event_opcionAStateChanged
 
     private void opcionBStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_opcionBStateChanged
-        //if(opcionB.isEnabled())
+        if(opcionB.isSelected())
+                preguntaActual.setRespuestaMarcada(2);
         
     }//GEN-LAST:event_opcionBStateChanged
 
     private void opcionCStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_opcionCStateChanged
-        //if(opcionC.isEnabled())
+        if(opcionC.isSelected())
+                preguntaActual.setRespuestaMarcada(3);
         
     }//GEN-LAST:event_opcionCStateChanged
 
     private void opcionDStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_opcionDStateChanged
-        //if(opcionD.isEnabled())
+        if(opcionD.isSelected())
+                preguntaActual.setRespuestaMarcada(4);
         
     }//GEN-LAST:event_opcionDStateChanged
 
