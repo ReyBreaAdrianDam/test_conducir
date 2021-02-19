@@ -5,9 +5,11 @@
  */
 package com.mycompany.test_conducir;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,12 +18,12 @@ import java.util.logging.Logger;
  *
  * @author adrir
  */
-public class GenerarPreguntas {
+public class ConexionBDPreguntas {
     ArrayList<Pregunta> preguntas;
-    public GenerarPreguntas() throws ClassNotFoundException, SQLException{
+    public ConexionBDPreguntas(File file) throws ClassNotFoundException, SQLException{
         preguntas = new ArrayList<>();
         Class.forName("org.sqlite.JDBC");
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:Z:/db/sqlite/test_conducir.db", "", "");
+        Connection cn = DriverManager.getConnection("jdbc:sqlite:" + file.getAbsolutePath(), "", "");
         Statement st = cn.createStatement();
         ResultSet rs = st.executeQuery("SELECT pregunta, enlace, id_pregunta from Preguntas");
         while(rs.next()){
@@ -30,7 +32,7 @@ public class GenerarPreguntas {
             try {
                 preguntas.add(new Pregunta(enlace, pregunta, null, null, null, null));
             } catch (IOException ex) {
-                Logger.getLogger(GenerarPreguntas.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ConexionBDPreguntas.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -42,7 +44,7 @@ public class GenerarPreguntas {
             while(rs.next()){
                 respuestas.add(new Respuesta(rs.getString(1), rs.getBoolean(2)));
             }
-            //Collections.shuffle(respuestas);
+            Collections.shuffle(respuestas);
             try{
                 pregunta.setR1(respuestas.get(0));
                 pregunta.setR2(respuestas.get(1));

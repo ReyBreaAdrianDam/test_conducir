@@ -16,13 +16,13 @@ import javax.imageio.ImageIO;
  * @author adrir
  */
 public class Pregunta {
-    Image img;
-    String pregunta;
-    Respuesta r1;
-    Respuesta r2;
-    Respuesta r3;
-    Respuesta r4;
-    int respuestaMarcada;
+    private Image img;
+    private String pregunta;
+    private Respuesta r1;
+    private Respuesta r2;
+    private Respuesta r3;
+    private Respuesta r4;
+    private int respuestaMarcada;
     public Pregunta() {}
 
     public Pregunta(Image img, String pregunta, Respuesta r1, Respuesta r2, Respuesta r3, Respuesta r4) {

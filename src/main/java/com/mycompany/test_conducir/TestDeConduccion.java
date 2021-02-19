@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.mycompany.test_conducir;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,16 +16,18 @@ import java.util.logging.Logger;
  *
  * @author adrir
  */
-public class Pantalla_principal extends javax.swing.JFrame {
+public class TestDeConduccion extends javax.swing.JFrame {
     ImageIcon imageIcon;
     ArrayList<Pregunta> preguntas;
     int numeroPregunta = 0;
     Pregunta preguntaActual;
+    File ficheroTest;
     /**
      * Creates new form Pantalla_principal
+     * @param ficheroTest
      */
-    public Pantalla_principal() {
-        
+    public TestDeConduccion(File ficheroTest) {
+        this.ficheroTest = ficheroTest;
         preguntas = new ArrayList<>();
         generarPreguntas();
         initComponents();
@@ -36,18 +39,8 @@ public class Pantalla_principal extends javax.swing.JFrame {
     }
     public void mostrarPregunta(int num){
         preguntaPanel.setVisible(false);
-        
         anterior.setEnabled(true);
         labelPreguntasResp.setText("Pregunta: " + (num + 1) + "/" + preguntas.size());
-        try{
-            
-            System.out.println(preguntaActual.getRespuestaMarcada());
-        }
-        
-        
-        catch (Exception ex) {
-            
-        }
         opciones.clearSelection();
         //Nueva pregunta
         preguntaActual = preguntas.get(num);
@@ -58,7 +51,23 @@ public class Pantalla_principal extends javax.swing.JFrame {
         opcionB.setText("<html>"+preguntaActual.getR2().getRespuesta()+"</html>");
         opcionC.setText("<html>"+preguntaActual.getR3().getRespuesta()+"</html>");
         opcionD.setText("<html>"+preguntaActual.getR4().getRespuesta()+"</html>");
-        
+        switch(preguntaActual.getRespuestaMarcada()){
+            case 1:
+                opcionA.setSelected(true);
+                break;
+            case 2:
+                opcionB.setSelected(true);
+                break;
+            case 3:
+                opcionC.setSelected(true);
+                break;
+            case 4:
+                opcionD.setSelected(true);
+                break;
+            default:
+                System.out.println("Sin opcion");
+                break;
+        }
         //Borrar despues
 //        if(preguntaActual.getR1().isCorrecta())
 //            opcionA.setSelected(true);
@@ -77,7 +86,7 @@ public class Pantalla_principal extends javax.swing.JFrame {
     }
     public void generarPreguntas(){
         try{
-            GenerarPreguntas gen = new GenerarPreguntas();
+            ConexionBDPreguntas gen = new ConexionBDPreguntas(ficheroTest);
             preguntas = gen.getPreguntas();
             Collections.shuffle(preguntas);
         }
@@ -88,27 +97,42 @@ public class Pantalla_principal extends javax.swing.JFrame {
     }
     public void mostrarResultados(){
         int respuestas_bien = 0;
+        int nPregunta = 1;
         for(Pregunta pregunta: preguntas){
-            switch(pregunta.respuestaMarcada){
+            System.out.println("\n" + nPregunta + "º " + (pregunta.getPregunta()));
+            Respuesta rMarcada = null;
+            switch(pregunta.getRespuestaMarcada()){
                 case 1:
                     if(pregunta.getR1().isCorrecta())
                         respuestas_bien++;
+                    rMarcada = pregunta.getR1();
                     break;
                 case 2:
                     if(pregunta.getR2().isCorrecta())
                         respuestas_bien++;
+                    rMarcada = pregunta.getR2();
                     break;
                 case 3:
                     if(pregunta.getR3().isCorrecta())
                         respuestas_bien++;
+                    rMarcada = pregunta.getR3();
                     break;
                 case 4:
                     if(pregunta.getR4().isCorrecta())
                         respuestas_bien++;
+                    rMarcada = pregunta.getR4();
                     break;
+                default:
+                    rMarcada = new Respuesta("No has marcado nada", false);
             }
+            System.out.println(rMarcada.getRespuesta());
+            if(rMarcada.isCorrecta())
+                System.out.println("la acertaste");
+            else
+                System.out.println("la fallaste");
+            nPregunta++;
         }
-        System.err.println(respuestas_bien);
+        System.out.println(respuestas_bien);
         
     }
     
@@ -136,10 +160,11 @@ public class Pantalla_principal extends javax.swing.JFrame {
         opcionC = new javax.swing.JRadioButton();
         opcionD = new javax.swing.JRadioButton();
         siguiente = new javax.swing.JButton();
+        anterior = new javax.swing.JButton();
         botonSalida = new javax.swing.JButton();
         labelPreguntasResp = new javax.swing.JLabel();
-        anterior = new javax.swing.JButton();
 
+        dialogoSalida.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         dialogoSalida.setMinimumSize(new java.awt.Dimension(400, 300));
         dialogoSalida.setUndecorated(true);
         dialogoSalida.setResizable(false);
@@ -192,11 +217,10 @@ public class Pantalla_principal extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Test conducción");
         setMinimumSize(new java.awt.Dimension(1600, 900));
-        setPreferredSize(new java.awt.Dimension(1600, 900));
 
         imagenLabel.setBounds(30,30,100,100);
-        imagenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/senal.png"))); // NOI18N
 
         preguntaLabel.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         preguntaLabel.setText("Esto es una pregunta, respondeme");
@@ -249,30 +273,26 @@ public class Pantalla_principal extends javax.swing.JFrame {
         preguntaPanelLayout.setHorizontalGroup(
             preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, preguntaPanelLayout.createSequentialGroup()
-                .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(57, 57, 57)
                 .addGroup(preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(preguntaPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(respuestasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(preguntaPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(respuestasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         preguntaPanelLayout.setVerticalGroup(
             preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(preguntaPanelLayout.createSequentialGroup()
-                .addGroup(preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(preguntaPanelLayout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(respuestasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE))
-                    .addGroup(preguntaPanelLayout.createSequentialGroup()
-                        .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(83, 83, 83)
+                .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(respuestasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(preguntaPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         siguiente.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -280,6 +300,14 @@ public class Pantalla_principal extends javax.swing.JFrame {
         siguiente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 siguienteActionPerformed(evt);
+            }
+        });
+
+        anterior.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        anterior.setText("Anterior");
+        anterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                anteriorActionPerformed(evt);
             }
         });
 
@@ -294,39 +322,33 @@ public class Pantalla_principal extends javax.swing.JFrame {
         labelPreguntasResp.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         labelPreguntasResp.setText("Pregunta: 0/30");
 
-        anterior.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        anterior.setText("Anterior");
-        anterior.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                anteriorActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(preguntaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(botonSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(siguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1208, Short.MAX_VALUE)
-                        .addComponent(labelPreguntasResp, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(anterior, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(botonSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(siguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1214, Short.MAX_VALUE)
+                                .addComponent(labelPreguntasResp, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(anterior, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(preguntaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(preguntaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(33, 33, 33)
                 .addComponent(siguiente)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(anterior)
@@ -408,25 +430,26 @@ public class Pantalla_principal extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]){
-        
-       
-        try {
-            UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubContrastIJTheme());
-            //</editor-fold>
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(Pantalla_principal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Pantalla_principal().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]){
+//        
+//       
+//        try {
+//            UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubContrastIJTheme());
+//            //</editor-fold>
+//        } catch (UnsupportedLookAndFeelException ex) {
+//            Logger.getLogger(Pantalla_principal.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
+//        
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                new Pantalla_principal().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton anterior;
