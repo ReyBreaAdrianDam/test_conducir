@@ -16,17 +16,20 @@ import java.util.logging.Logger;
  *
  * @author adrir
  */
-public class TestDeConduccion extends javax.swing.JFrame {
+public class PantallaTest extends javax.swing.JFrame {
     ImageIcon imageIcon;
     ArrayList<Pregunta> preguntas;
     int numeroPregunta = 0;
     Pregunta preguntaActual;
     File ficheroTest;
+    boolean online;
     /**
      * Creates new form Pantalla_principal
      * @param ficheroTest
+     * @param online
      */
-    public TestDeConduccion(File ficheroTest) {
+    public PantallaTest(File ficheroTest, boolean online) {
+        this.online = online;
         this.ficheroTest = ficheroTest;
         preguntas = new ArrayList<>();
         generarPreguntas();
@@ -86,7 +89,7 @@ public class TestDeConduccion extends javax.swing.JFrame {
     }
     public void generarPreguntas(){
         try{
-            ConexionBDPreguntas gen = new ConexionBDPreguntas(ficheroTest);
+            ConexionBDPreguntas gen = new ConexionBDPreguntas(ficheroTest, online);
             preguntas = gen.getPreguntas();
             Collections.shuffle(preguntas);
         }
@@ -159,6 +162,7 @@ public class TestDeConduccion extends javax.swing.JFrame {
         opcionB = new javax.swing.JRadioButton();
         opcionC = new javax.swing.JRadioButton();
         opcionD = new javax.swing.JRadioButton();
+        labelOnline = new javax.swing.JLabel();
         siguiente = new javax.swing.JButton();
         anterior = new javax.swing.JButton();
         botonSalida = new javax.swing.JButton();
@@ -268,6 +272,15 @@ public class TestDeConduccion extends javax.swing.JFrame {
         });
         respuestasPanel.add(opcionD);
 
+        labelOnline.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        labelOnline.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        String modo;
+        if(online)
+        modo = "Online";
+        else
+        modo = "Offline";
+        labelOnline.setText(modo);
+
         javax.swing.GroupLayout preguntaPanelLayout = new javax.swing.GroupLayout(preguntaPanel);
         preguntaPanel.setLayout(preguntaPanelLayout);
         preguntaPanelLayout.setHorizontalGroup(
@@ -275,24 +288,34 @@ public class TestDeConduccion extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, preguntaPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57)
                 .addGroup(preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(respuestasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1172, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(preguntaPanelLayout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addGroup(preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(preguntaPanelLayout.createSequentialGroup()
+                                .addComponent(respuestasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 49, Short.MAX_VALUE))
+                            .addComponent(preguntaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(preguntaPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelOnline, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         preguntaPanelLayout.setVerticalGroup(
             preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(preguntaPanelLayout.createSequentialGroup()
-                .addGap(83, 83, 83)
-                .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(respuestasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(preguntaPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(preguntaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(preguntaPanelLayout.createSequentialGroup()
+                        .addComponent(labelOnline, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(respuestasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE))
+                    .addGroup(preguntaPanelLayout.createSequentialGroup()
+                        .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         siguiente.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -458,6 +481,7 @@ public class TestDeConduccion extends javax.swing.JFrame {
     private javax.swing.JDialog dialogoSalida;
     private javax.swing.JLabel imagenLabel;
     private javax.swing.JLabel jTextSalir;
+    private javax.swing.JLabel labelOnline;
     private javax.swing.JLabel labelPreguntasResp;
     private javax.swing.JRadioButton opcionA;
     private javax.swing.JRadioButton opcionB;

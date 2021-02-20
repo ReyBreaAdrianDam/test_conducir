@@ -6,13 +6,12 @@
 package com.adrian.rey.brea.test_conducir;
 
 /**
- *
+ * Esta clase genera una respuesta, que puede ser verdadera o falsa
  * @author adrir
  */
 class Respuesta {
     private String respuesta;
     private boolean correcta;
-    
     public Respuesta(){
         
     }

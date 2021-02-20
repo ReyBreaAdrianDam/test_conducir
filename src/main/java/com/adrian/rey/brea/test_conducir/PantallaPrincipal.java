@@ -4,31 +4,28 @@
  * and open the template in the editor.
  */
 package com.adrian.rey.brea.test_conducir;
-
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.io.File;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 /**
  *
  * @author adrir
  */
-public class Seleccion extends javax.swing.JFrame {
+public class PantallaPrincipal extends javax.swing.JFrame {
 
     /**
      * Creates new form Seleccion
      */
-    public Seleccion() {
+    public PantallaPrincipal() {
         initComponents();
     }
 
@@ -43,6 +40,7 @@ public class Seleccion extends javax.swing.JFrame {
 
         elegirBBDD = new javax.swing.JButton();
         salir = new javax.swing.JButton();
+        testOnline = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -82,6 +80,13 @@ public class Seleccion extends javax.swing.JFrame {
             }
         });
 
+        testOnline.setText("Test Online");
+        testOnline.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                testOnlineActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -92,6 +97,10 @@ public class Seleccion extends javax.swing.JFrame {
                     .addComponent(salir)
                     .addComponent(elegirBBDD, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(200, 200, 200))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(testOnline)
+                .addContainerGap())
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {elegirBBDD, salir});
@@ -99,7 +108,9 @@ public class Seleccion extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(138, 138, 138)
+                .addContainerGap()
+                .addComponent(testOnline)
+                .addGap(110, 110, 110)
                 .addComponent(elegirBBDD, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(salir, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -115,17 +126,26 @@ public class Seleccion extends javax.swing.JFrame {
     }//GEN-LAST:event_salirActionPerformed
 
     private void elegirBBDDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_elegirBBDDActionPerformed
-        JFileChooser fc = new JFileChooser();
-        fc.setFileFilter(new FileNameExtensionFilter("Bases de datos *.tdc", "tdc"));
-        int returnVal = fc.showOpenDialog(Seleccion.this);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-           File file = fc.getSelectedFile();
-            TestDeConduccion ppal = new TestDeConduccion(file);
-            this.dispose();
+        try {
+            JFileChooser fc = new JFileChooser();
+            fc.setFileFilter(new FileNameExtensionFilter("Bases de datos *.tdc", "tdc"));
+            int returnVal = fc.showOpenDialog(PantallaPrincipal.this);
+            
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                PantallaTest ppal = new PantallaTest(file, false);
+                this.dispose();
             }
+        } catch (HeadlessException ex) {
+            System.out.println("Revisa la conexion a internet");
+        } 
           
     }//GEN-LAST:event_elegirBBDDActionPerformed
+
+    private void testOnlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testOnlineActionPerformed
+        File fil = null;
+        PantallaTest testDeConduccion = new PantallaTest(fil, true);
+    }//GEN-LAST:event_testOnlineActionPerformed
 
     /**
      * @param args the command line arguments
@@ -135,14 +155,15 @@ public class Seleccion extends javax.swing.JFrame {
             UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubContrastIJTheme());
             //</editor-fold>
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(TestDeConduccion.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PantallaTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Seleccion().setVisible(true);
+                new PantallaPrincipal().setVisible(true);
+                
             }
         });
     }
@@ -150,5 +171,6 @@ public class Seleccion extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton elegirBBDD;
     private javax.swing.JButton salir;
+    private javax.swing.JButton testOnline;
     // End of variables declaration//GEN-END:variables
 }

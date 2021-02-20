@@ -12,7 +12,9 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 
 /**
- *
+ * Clase pregunta requiere de un parametro String pregunta
+ * cuatro parametros preguntas
+ * y la imagen del proyecto
  * @author adrir
  */
 public class Pregunta {

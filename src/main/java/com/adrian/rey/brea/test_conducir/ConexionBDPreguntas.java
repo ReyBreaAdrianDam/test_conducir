@@ -20,12 +20,21 @@ import java.util.logging.Logger;
  */
 public class ConexionBDPreguntas {
     ArrayList<Pregunta> preguntas;
-    public ConexionBDPreguntas(File file) throws ClassNotFoundException, SQLException{
+    public ConexionBDPreguntas(File file, boolean online) throws ClassNotFoundException, SQLException{
         preguntas = new ArrayList<>();
-        Class.forName("org.sqlite.JDBC");
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:" + file.getAbsolutePath(), "", "");
-        Statement st = cn.createStatement();
-        ResultSet rs = st.executeQuery("SELECT pregunta, enlace, id_pregunta from Preguntas");
+        Connection cn;
+        Statement st;
+        if(!online){
+            Class.forName("org.sqlite.JDBC");
+            cn = DriverManager.getConnection("jdbc:sqlite:" + file.getAbsolutePath(), "", "");
+            st = cn.createStatement();
+        }
+        else{
+            Class.forName("com.mysql.jdbc.Driver");
+            cn = DriverManager.getConnection("jdbc:mysql://remotemysql.com/OvRJMSSbYJ", "OvRJMSSbYJ", "xqCGH8DwF1");
+            st = cn.createStatement();
+        }
+        ResultSet rs = st.executeQuery("SELECT pregunta, enlace, id_pregunta from preguntas");
         while(rs.next()){
             String pregunta = rs.getString(1);
             String enlace = rs.getString(2);
@@ -76,9 +85,13 @@ public class ConexionBDPreguntas {
 //                pregunta.setR3(new Respuesta("false", false));
 //                pregunta.setR4(new Respuesta("false", false));
             }
+            
         }
+        rs.close();
+        st.close();
+        cn.close();
     }
-
+    
     public ArrayList<Pregunta> getPreguntas() {
         return preguntas;
     }
