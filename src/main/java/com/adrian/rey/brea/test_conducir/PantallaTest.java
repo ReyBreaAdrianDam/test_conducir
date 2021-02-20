@@ -28,6 +28,7 @@ public class PantallaTest extends javax.swing.JFrame {
      * @param ficheroTest
      * @param online
      */
+    
     public PantallaTest(File ficheroTest, boolean online) {
         this.online = online;
         this.ficheroTest = ficheroTest;
@@ -44,7 +45,6 @@ public class PantallaTest extends javax.swing.JFrame {
         preguntaPanel.setVisible(false);
         anterior.setEnabled(true);
         labelPreguntasResp.setText("Pregunta: " + (num + 1) + "/" + preguntas.size());
-        opciones.clearSelection();
         //Nueva pregunta
         preguntaActual = preguntas.get(num);
         imageIcon = new ImageIcon(preguntaActual.getImg());
@@ -67,19 +67,19 @@ public class PantallaTest extends javax.swing.JFrame {
             case 4:
                 opcionD.setSelected(true);
                 break;
-            default:
-                System.out.println("Sin opcion");
+            default:  
+                opciones.clearSelection();
                 break;
         }
         //Borrar despues
-//        if(preguntaActual.getR1().isCorrecta())
-//            opcionA.setSelected(true);
-//        else if(preguntaActual.getR2().isCorrecta())
-//            opcionB.setSelected(true);
-//        else if(preguntaActual.getR3().isCorrecta())
-//            opcionC.setSelected(true);
-//        else if(preguntaActual.getR4().isCorrecta())
-//            opcionD.setSelected(true);
+        if(preguntaActual.getR1().isCorrecta())
+            opcionA.setSelected(true);
+        else if(preguntaActual.getR2().isCorrecta())
+            opcionB.setSelected(true);
+        else if(preguntaActual.getR3().isCorrecta())
+            opcionC.setSelected(true);
+        else if(preguntaActual.getR4().isCorrecta())
+            opcionD.setSelected(true);
         if(numeroPregunta == 29 || numeroPregunta + 1 == preguntas.size())
             siguiente.setText("Finalizar");
         else if(numeroPregunta == 0)

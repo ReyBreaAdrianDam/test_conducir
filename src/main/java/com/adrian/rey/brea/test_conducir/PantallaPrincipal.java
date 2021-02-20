@@ -12,7 +12,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -21,11 +24,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author adrir
  */
 public class PantallaPrincipal extends javax.swing.JFrame {
-
+    private boolean oscuro;
     /**
-     * Creates new form Seleccion
+     * Creates new form PantallaPrincipal
      */
     public PantallaPrincipal() {
+        oscuro = false;
         initComponents();
     }
 
@@ -41,6 +45,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         elegirBBDD = new javax.swing.JButton();
         salir = new javax.swing.JButton();
         testOnline = new javax.swing.JButton();
+        modoOscuro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -80,10 +85,18 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        testOnline.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         testOnline.setText("Test Online");
         testOnline.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 testOnlineActionPerformed(evt);
+            }
+        });
+
+        modoOscuro.putClientProperty("JButton.buttonType", "roundRect");
+        modoOscuro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modoOscuroActionPerformed(evt);
             }
         });
 
@@ -92,14 +105,18 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(200, 200, 200)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(salir)
-                    .addComponent(elegirBBDD, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(200, 200, 200))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(testOnline)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(200, 200, 200)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(salir)
+                            .addComponent(elegirBBDD, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 194, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(testOnline)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(modoOscuro)))
                 .addContainerGap())
         );
 
@@ -109,13 +126,25 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(testOnline)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(testOnline)
+                    .addComponent(modoOscuro))
                 .addGap(110, 110, 110)
                 .addComponent(elegirBBDD, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(salir, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(134, 134, 134))
+                .addContainerGap(130, Short.MAX_VALUE))
         );
+
+        try{
+            URL url = new URL("https://www.dropbox.com/s/aywzylrqwn9a2nd/moon.png?raw=1");
+            Image img = ImageIO.read(url);
+            modoOscuro.setIcon(new ImageIcon(img));
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            modoOscuro.setText("Modo oscuro");
+        }
 
         pack();
         setLocationRelativeTo(null);
@@ -128,13 +157,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private void elegirBBDDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_elegirBBDDActionPerformed
         try {
             JFileChooser fc = new JFileChooser();
-            fc.setFileFilter(new FileNameExtensionFilter("Bases de datos *.tdc", "tdc"));
+            fc.setFileFilter(new FileNameExtensionFilter("Test de conducir *.tdc", "tdc"));
             int returnVal = fc.showOpenDialog(PantallaPrincipal.this);
             
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-                PantallaTest ppal = new PantallaTest(file, false);
-                this.dispose();
+                lanzarTest(file, false);
             }
         } catch (HeadlessException ex) {
             System.out.println("Revisa la conexion a internet");
@@ -144,25 +172,49 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     private void testOnlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testOnlineActionPerformed
         File fil = null;
-        PantallaTest testDeConduccion = new PantallaTest(fil, true);
+        lanzarTest(fil, true);
     }//GEN-LAST:event_testOnlineActionPerformed
+    public void modoOscuro(){
+        oscuro = !oscuro;
+        try {
+            if(oscuro){
+                UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme());
+            }
+            else{
+                UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.FlatArcDarkOrangeIJTheme());
+            }
+            SwingUtilities.updateComponentTreeUI(this);
+        } catch (UnsupportedLookAndFeelException ex) {
+                Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void modoOscuroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoOscuroActionPerformed
+        modoOscuro();
+    }//GEN-LAST:event_modoOscuroActionPerformed
+    public void lanzarTest(File file, boolean online){
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        PantallaTest test = new PantallaTest(file, online);
+        test.setVisible(true);
+        this.dispose();
+        
+    }
+    public PantallaPrincipal(JButton elegirBBDD, JButton salir, JButton testOnline) throws HeadlessException {
+        this.elegirBBDD = elegirBBDD;
+        this.salir = salir;
+        this.testOnline = testOnline;
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubContrastIJTheme());
-            //</editor-fold>
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(PantallaTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PantallaPrincipal().setVisible(true);
+                PantallaPrincipal pantallaPrincipal = new PantallaPrincipal();
+                pantallaPrincipal.setVisible(true);
+                pantallaPrincipal.modoOscuro();
                 
             }
         });
@@ -170,6 +222,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton elegirBBDD;
+    private javax.swing.JButton modoOscuro;
     private javax.swing.JButton salir;
     private javax.swing.JButton testOnline;
     // End of variables declaration//GEN-END:variables

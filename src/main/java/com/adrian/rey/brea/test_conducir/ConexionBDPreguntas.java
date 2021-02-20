@@ -30,7 +30,7 @@ public class ConexionBDPreguntas {
             st = cn.createStatement();
         }
         else{
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             cn = DriverManager.getConnection("jdbc:mysql://remotemysql.com/OvRJMSSbYJ", "OvRJMSSbYJ", "xqCGH8DwF1");
             st = cn.createStatement();
         }
