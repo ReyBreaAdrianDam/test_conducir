@@ -18,11 +18,37 @@ public class PantallaResultados extends javax.swing.JFrame {
      * @param preguntas
      */
     public PantallaResultados(ArrayList<Pregunta> preguntas) {
+        this.setTitle("RESULTADOS");
         this.preguntas = preguntas;
         initComponents();
         jTabbedPane1.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
-        for(int i = 0; i < preguntas.size(); i++)
+        int acertadas = 0;
+        for(int i = 0; i < preguntas.size(); i++){
             jTabbedPane1.add("Pregunta " + (i + 1),new PreguntaRespondida(preguntas.get(i)));
+            switch(preguntas.get(i).getRespuestaMarcada()){
+                case 1:
+                    if(preguntas.get(i).getR1().isCorrecta())
+                        acertadas++;
+                    break;
+                case 2:
+                    if(preguntas.get(i).getR2().isCorrecta())
+                        acertadas++;
+                    break;
+                case 3:
+                    if(preguntas.get(i).getR3().isCorrecta())
+                        acertadas++;
+                    break;
+                case 4:
+                    if(preguntas.get(i).getR4().isCorrecta())
+                        acertadas++;
+                    break;
+            }
+        }
+        
+        if(acertadas >= preguntas.size() - (preguntas.size() / 10))
+            acertadasLabel.setText(acertadas + "/" + preguntas.size() +  " APROBADO");
+        else
+            acertadasLabel.setText(acertadas + "/" + preguntas.size() +  " SUSPENSO");
     }
 
     /**
@@ -37,9 +63,10 @@ public class PantallaResultados extends javax.swing.JFrame {
         respuestas = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         salir = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        acertadasLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         respuestas.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         respuestas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -55,8 +82,9 @@ public class PantallaResultados extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel1.setText("99/99");
+        acertadasLabel.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        acertadasLabel.setText("99/99 APROBADO");
+        acertadasLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -69,8 +97,8 @@ public class PantallaResultados extends javax.swing.JFrame {
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(salir)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 652, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 522, Short.MAX_VALUE)
+                        .addComponent(acertadasLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -78,11 +106,11 @@ public class PantallaResultados extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(respuestas, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(salir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
+                    .addComponent(acertadasLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -102,7 +130,7 @@ public class PantallaResultados extends javax.swing.JFrame {
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel acertadasLabel;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel respuestas;
     private javax.swing.JButton salir;

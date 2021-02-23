@@ -5,6 +5,7 @@
  */
 package com.adrian.rey.brea.test_conducir;
 
+import java.awt.Image;
 import javax.swing.ImageIcon;
 
 /**
@@ -19,7 +20,11 @@ public class PreguntaRespondida extends javax.swing.JPanel {
      */
     public PreguntaRespondida(Pregunta pregunta) {
         initComponents();
-        imagenLabel.setIcon(new ImageIcon(pregunta.getImg()));
+        
+        Image preguntaImg = pregunta.getImg().getScaledInstance(145, 100, Image.SCALE_SMOOTH);
+        
+        imagenLabel.setIcon(new ImageIcon(preguntaImg));
+        
         preguntaLabel.setText("<html>" + pregunta.getPregunta() + "</html>");
         switch(pregunta.getRespuestaMarcada()){
             case 1:
@@ -66,8 +71,7 @@ public class PreguntaRespondida extends javax.swing.JPanel {
 
         setPreferredSize(new java.awt.Dimension(940, 433));
 
-        preguntaLabel.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
-        preguntaLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        preguntaLabel.setFont(new java.awt.Font("Segoe UI", 0, 22)); // NOI18N
         preguntaLabel.setText("Pregunta");
 
         respuestaCorrecta.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -76,40 +80,35 @@ public class PreguntaRespondida extends javax.swing.JPanel {
         respuestaSeleccionada1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         respuestaSeleccionada1.setText("Pregunta seleccionada");
 
+        imagenLabel.setMaximumSize(new java.awt.Dimension(100, 100));
+        imagenLabel.setMinimumSize(new java.awt.Dimension(100, 100));
+        imagenLabel.setPreferredSize(new java.awt.Dimension(100, 100));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(respuestaCorrecta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(imagenLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 818, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(respuestaSeleccionada1, javax.swing.GroupLayout.DEFAULT_SIZE, 928, Short.MAX_VALUE)
-                    .addContainerGap()))
+                    .addComponent(respuestaSeleccionada1, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 770, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(respuestaCorrecta, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 111, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(preguntaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(imagenLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(preguntaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addComponent(respuestaSeleccionada1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
                 .addComponent(respuestaCorrecta, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(66, 66, 66))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(114, 114, 114)
-                    .addComponent(respuestaSeleccionada1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(213, Short.MAX_VALUE)))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
