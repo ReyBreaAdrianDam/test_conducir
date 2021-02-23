@@ -21,6 +21,8 @@ public class PantallaTest extends javax.swing.JFrame {
     Pregunta preguntaActual;
     File ficheroTest;
     boolean online;
+    boolean godMode;
+    int intentosSalida = 0;
     /**
      * Creates new form Pantalla_principal
      * @param ficheroTest
@@ -29,6 +31,7 @@ public class PantallaTest extends javax.swing.JFrame {
     
     public PantallaTest(File ficheroTest, boolean online) throws com.mysql.cj.jdbc.exceptions.CommunicationsException, SQLException , ClassNotFoundException {
         this.online = online;
+        godMode = false;
         this.ficheroTest = ficheroTest;
         preguntas = new ArrayList<>();
         generarPreguntas();
@@ -69,21 +72,25 @@ public class PantallaTest extends javax.swing.JFrame {
                 opciones.clearSelection();
                 break;
         }
-        //Borrar despues
-//        if(preguntaActual.getR1().isCorrecta())
-//            opcionA.setSelected(true);
-//        else if(preguntaActual.getR2().isCorrecta())
-//            opcionB.setSelected(true);
-//        else if(preguntaActual.getR3().isCorrecta())
-//            opcionC.setSelected(true);
-//        else if(preguntaActual.getR4().isCorrecta())
-//            opcionD.setSelected(true);
+        if(godMode){
+            godMode();
+        }
         if(numeroPregunta == 29 || numeroPregunta + 1 == preguntas.size())
             siguiente.setText("Finalizar");
         else if(numeroPregunta == 0)
             anterior.setEnabled(false);
         else siguiente.setText("Siguiente");
         preguntaPanel.setVisible(true);
+    }
+    public void godMode(){
+        if(preguntaActual.getR1().isCorrecta())
+            opcionA.setSelected(true);
+        else if(preguntaActual.getR2().isCorrecta())
+            opcionB.setSelected(true);
+        else if(preguntaActual.getR3().isCorrecta())
+            opcionC.setSelected(true);
+        else if(preguntaActual.getR4().isCorrecta())
+            opcionD.setSelected(true);
     }
     public void generarPreguntas() throws com.mysql.cj.jdbc.exceptions.CommunicationsException, SQLException , ClassNotFoundException{
         
@@ -92,6 +99,9 @@ public class PantallaTest extends javax.swing.JFrame {
         Collections.shuffle(preguntas);
     }
     public void mostrarResultados(){
+        this.dispose();
+        PantallaResultados pr = new PantallaResultados(preguntas);
+        pr.setVisible(true);
         int respuestas_bien = 0;
         int nPregunta = 1;
         for(Pregunta pregunta: preguntas){
@@ -147,7 +157,6 @@ public class PantallaTest extends javax.swing.JFrame {
         jTextSalir = new javax.swing.JLabel();
         confirmarSalida = new javax.swing.JButton();
         rechazarSalida = new javax.swing.JButton();
-        dialogoResultados = new javax.swing.JDialog();
         preguntaPanel = new javax.swing.JPanel();
         imagenLabel = new javax.swing.JLabel(imageIcon);
         preguntaLabel = new javax.swing.JLabel();
@@ -213,17 +222,6 @@ public class PantallaTest extends javax.swing.JFrame {
                     .addComponent(confirmarSalida)
                     .addComponent(rechazarSalida))
                 .addGap(77, 77, 77))
-        );
-
-        javax.swing.GroupLayout dialogoResultadosLayout = new javax.swing.GroupLayout(dialogoResultados.getContentPane());
-        dialogoResultados.getContentPane().setLayout(dialogoResultadosLayout);
-        dialogoResultadosLayout.setHorizontalGroup(
-            dialogoResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 983, Short.MAX_VALUE)
-        );
-        dialogoResultadosLayout.setVerticalGroup(
-            dialogoResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 577, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -304,7 +302,7 @@ public class PantallaTest extends javax.swing.JFrame {
                             .addComponent(preguntaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(preguntaPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(labelOnline, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(labelOnline, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         preguntaPanelLayout.setVerticalGroup(
@@ -408,6 +406,7 @@ public class PantallaTest extends javax.swing.JFrame {
 
     private void rechazarSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechazarSalidaActionPerformed
         // TODO add your handling code here:
+        intentosSalida++;
         this.setEnabled(true);
         dialogoSalida.dispose();
     }//GEN-LAST:event_rechazarSalidaActionPerformed
@@ -420,9 +419,18 @@ public class PantallaTest extends javax.swing.JFrame {
 
     private void confirmarSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmarSalidaActionPerformed
         // TODO add your handling code here:
+        
+        if(!godMode && intentosSalida == 4){
+            intentosSalida++;
+            godMode = true;
+            labelOnline.setText(labelOnline.getText() + " - GodMode");
+            godMode();
+            this.setEnabled(true);
+        }
+        else{
+            mostrarResultados();
+        }
         dialogoSalida.dispose();
-        this.dispose();
-        mostrarResultados();
     }//GEN-LAST:event_confirmarSalidaActionPerformed
 
     private void anteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_anteriorActionPerformed
@@ -484,7 +492,6 @@ public class PantallaTest extends javax.swing.JFrame {
     private javax.swing.JButton anterior;
     private javax.swing.JButton botonSalida;
     private javax.swing.JButton confirmarSalida;
-    private javax.swing.JDialog dialogoResultados;
     private javax.swing.JDialog dialogoSalida;
     private javax.swing.JLabel imagenLabel;
     private javax.swing.JLabel jTextSalir;
