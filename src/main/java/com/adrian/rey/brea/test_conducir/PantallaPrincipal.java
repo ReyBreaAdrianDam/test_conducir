@@ -8,6 +8,7 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.io.File;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -15,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -57,7 +59,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         elegirBBDD.setMinimumSize(new java.awt.Dimension(85, 60));
         try{
             URL url = new URL("https://www.dropbox.com/s/evle7hxuw5br9cw/play.png?raw=1");
-            Image img = ImageIO.read(url);
+            Image img = java.awt.Toolkit.getDefaultToolkit().createImage(url);
             elegirBBDD.setIcon(new ImageIcon(img));
         }
         catch(Exception ex){
@@ -72,7 +74,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         salir.setFont(new java.awt.Font("Segoe UI Light", 0, 24)); // NOI18N
         try{
             URL url = new URL("https://www.dropbox.com/s/iyegq1j56pdiio7/exit.png?raw=1");
-            Image img = ImageIO.read(url);
+            Image img = java.awt.Toolkit.getDefaultToolkit().createImage(url);
             salir.setIcon(new ImageIcon(img));
         }
         catch(Exception ex){
@@ -138,7 +140,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         try{
             URL url = new URL("https://www.dropbox.com/s/aywzylrqwn9a2nd/moon.png?raw=1");
-            Image img = ImageIO.read(url);
+            Image img = java.awt.Toolkit.getDefaultToolkit().createImage(url);//ImageIO.read(url);
             modoOscuro.setIcon(new ImageIcon(img));
         }
         catch(Exception ex){
@@ -159,7 +161,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             JFileChooser fc = new JFileChooser();
             fc.setFileFilter(new FileNameExtensionFilter("Test de conducir *.tdc", "tdc"));
             int returnVal = fc.showOpenDialog(PantallaPrincipal.this);
-            
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 lanzarTest(file, false);
@@ -173,6 +174,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private void testOnlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testOnlineActionPerformed
         File fil = null;
         lanzarTest(fil, true);
+         
     }//GEN-LAST:event_testOnlineActionPerformed
     public void modoOscuro(){
         oscuro = !oscuro;
@@ -193,12 +195,21 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_modoOscuroActionPerformed
     public void lanzarTest(File file, boolean online){
         JFrame.setDefaultLookAndFeelDecorated(true);
-        PantallaTest test = new PantallaTest(file, online);
-        test.setVisible(true);
-        this.dispose();
+        try{
+            PantallaTest test = new PantallaTest(file, online);
+            test.setVisible(true);
+            this.dispose();
+        }
+        catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "No se puede acceder a la base de datos. Quizas esten los puertos cerrados", "ERROR", JOptionPane.ERROR_MESSAGE);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         
     }
-    public PantallaPrincipal(JButton elegirBBDD, JButton salir, JButton testOnline) throws HeadlessException {
+    public PantallaPrincipal(JButton elegirBBDD, JButton salir, JButton testOnline)throws ExceptionInInitializerError{
         this.elegirBBDD = elegirBBDD;
         this.salir = salir;
         this.testOnline = testOnline;

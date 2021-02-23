@@ -39,7 +39,7 @@ public class Pregunta {
     public Pregunta(String enlaceImg, String pregunta, Respuesta r1, Respuesta r2, Respuesta r3, Respuesta r4) throws MalformedURLException, IOException {
         respuestaMarcada = -1;
         URL url = new URL(enlaceImg);
-        img = ImageIO.read(url);
+        img = java.awt.Toolkit.getDefaultToolkit().createImage(url);;
         this.img = img;
         this.pregunta = pregunta;
         this.r1 = r1;

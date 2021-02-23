@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -29,7 +27,7 @@ public class PantallaTest extends javax.swing.JFrame {
      * @param online
      */
     
-    public PantallaTest(File ficheroTest, boolean online) {
+    public PantallaTest(File ficheroTest, boolean online) throws com.mysql.cj.jdbc.exceptions.CommunicationsException, SQLException , ClassNotFoundException {
         this.online = online;
         this.ficheroTest = ficheroTest;
         preguntas = new ArrayList<>();
@@ -72,14 +70,14 @@ public class PantallaTest extends javax.swing.JFrame {
                 break;
         }
         //Borrar despues
-        if(preguntaActual.getR1().isCorrecta())
-            opcionA.setSelected(true);
-        else if(preguntaActual.getR2().isCorrecta())
-            opcionB.setSelected(true);
-        else if(preguntaActual.getR3().isCorrecta())
-            opcionC.setSelected(true);
-        else if(preguntaActual.getR4().isCorrecta())
-            opcionD.setSelected(true);
+//        if(preguntaActual.getR1().isCorrecta())
+//            opcionA.setSelected(true);
+//        else if(preguntaActual.getR2().isCorrecta())
+//            opcionB.setSelected(true);
+//        else if(preguntaActual.getR3().isCorrecta())
+//            opcionC.setSelected(true);
+//        else if(preguntaActual.getR4().isCorrecta())
+//            opcionD.setSelected(true);
         if(numeroPregunta == 29 || numeroPregunta + 1 == preguntas.size())
             siguiente.setText("Finalizar");
         else if(numeroPregunta == 0)
@@ -87,16 +85,11 @@ public class PantallaTest extends javax.swing.JFrame {
         else siguiente.setText("Siguiente");
         preguntaPanel.setVisible(true);
     }
-    public void generarPreguntas(){
-        try{
-            ConexionBDPreguntas gen = new ConexionBDPreguntas(ficheroTest, online);
-            preguntas = gen.getPreguntas();
-            Collections.shuffle(preguntas);
-        }
-        catch(SQLException | ClassNotFoundException ex){
-            System.out.println("Esto no deberia de haber pasado");
-            ex.printStackTrace();
-        }
+    public void generarPreguntas() throws com.mysql.cj.jdbc.exceptions.CommunicationsException, SQLException , ClassNotFoundException{
+        
+        ConexionBDPreguntas gen = new ConexionBDPreguntas(ficheroTest, online);
+        preguntas = gen.getPreguntas();
+        Collections.shuffle(preguntas);
     }
     public void mostrarResultados(){
         int respuestas_bien = 0;
@@ -154,6 +147,7 @@ public class PantallaTest extends javax.swing.JFrame {
         jTextSalir = new javax.swing.JLabel();
         confirmarSalida = new javax.swing.JButton();
         rechazarSalida = new javax.swing.JButton();
+        dialogoResultados = new javax.swing.JDialog();
         preguntaPanel = new javax.swing.JPanel();
         imagenLabel = new javax.swing.JLabel(imageIcon);
         preguntaLabel = new javax.swing.JLabel();
@@ -173,6 +167,7 @@ public class PantallaTest extends javax.swing.JFrame {
         dialogoSalida.setUndecorated(true);
         dialogoSalida.setResizable(false);
         dialogoSalida.setSize(new java.awt.Dimension(0, 0));
+        dialogoSalida.setType(java.awt.Window.Type.POPUP);
         dialogoSalida.setLocationRelativeTo(this);
 
         jTextSalir.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -218,6 +213,17 @@ public class PantallaTest extends javax.swing.JFrame {
                     .addComponent(confirmarSalida)
                     .addComponent(rechazarSalida))
                 .addGap(77, 77, 77))
+        );
+
+        javax.swing.GroupLayout dialogoResultadosLayout = new javax.swing.GroupLayout(dialogoResultados.getContentPane());
+        dialogoResultados.getContentPane().setLayout(dialogoResultadosLayout);
+        dialogoResultadosLayout.setHorizontalGroup(
+            dialogoResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 983, Short.MAX_VALUE)
+        );
+        dialogoResultadosLayout.setVerticalGroup(
+            dialogoResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 577, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -478,6 +484,7 @@ public class PantallaTest extends javax.swing.JFrame {
     private javax.swing.JButton anterior;
     private javax.swing.JButton botonSalida;
     private javax.swing.JButton confirmarSalida;
+    private javax.swing.JDialog dialogoResultados;
     private javax.swing.JDialog dialogoSalida;
     private javax.swing.JLabel imagenLabel;
     private javax.swing.JLabel jTextSalir;

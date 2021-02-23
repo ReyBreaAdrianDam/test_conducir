@@ -81,12 +81,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="elegirBBDDActionPerformed"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="try{&#xa;    URL url = new URL(&quot;https://www.dropbox.com/s/evle7hxuw5br9cw/play.png?raw=1&quot;);&#xa;    Image img = ImageIO.read(url);&#xa;    elegirBBDD.setIcon(new ImageIcon(img));&#xa;}&#xa;catch(Exception ex){&#xa;    ex.printStackTrace();&#xa;}"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="try{&#xa;    URL url = new URL(&quot;https://www.dropbox.com/s/evle7hxuw5br9cw/play.png?raw=1&quot;);&#xa;    Image img = java.awt.Toolkit.getDefaultToolkit().createImage(url);&#xa;    elegirBBDD.setIcon(new ImageIcon(img));&#xa;}&#xa;catch(Exception ex){&#xa;    ex.printStackTrace();&#xa;}"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="salir">
       <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor" postCode="try{&#xa;    URL url = new URL(&quot;https://www.dropbox.com/s/iyegq1j56pdiio7/exit.png?raw=1&quot;);&#xa;    Image img = ImageIO.read(url);&#xa;    salir.setIcon(new ImageIcon(img));&#xa;}&#xa;catch(Exception ex){&#xa;    ex.printStackTrace();&#xa;}">
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor" postCode="try{&#xa;    URL url = new URL(&quot;https://www.dropbox.com/s/iyegq1j56pdiio7/exit.png?raw=1&quot;);&#xa;    Image img = java.awt.Toolkit.getDefaultToolkit().createImage(url);&#xa;    salir.setIcon(new ImageIcon(img));&#xa;}&#xa;catch(Exception ex){&#xa;    ex.printStackTrace();&#xa;}">
           <Font name="Segoe UI Light" size="24" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Salir"/>
@@ -111,7 +111,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="modoOscuroActionPerformed"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="try{&#xa;    URL url = new URL(&quot;https://www.dropbox.com/s/aywzylrqwn9a2nd/moon.png?raw=1&quot;);&#xa;    Image img = ImageIO.read(url);&#xa;    modoOscuro.setIcon(new ImageIcon(img));&#xa;}&#xa;catch(Exception ex){&#xa;    ex.printStackTrace();&#xa;    modoOscuro.setText(&quot;Modo oscuro&quot;);&#xa;}"/>
+        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="try{&#xa;    URL url = new URL(&quot;https://www.dropbox.com/s/aywzylrqwn9a2nd/moon.png?raw=1&quot;);&#xa;    Image img = java.awt.Toolkit.getDefaultToolkit().createImage(url);//ImageIO.read(url);&#xa;    modoOscuro.setIcon(new ImageIcon(img));&#xa;}&#xa;catch(Exception ex){&#xa;    ex.printStackTrace();&#xa;    modoOscuro.setText(&quot;Modo oscuro&quot;);&#xa;}"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="modoOscuro.putClientProperty(&quot;JButton.buttonType&quot;, &quot;roundRect&quot;);"/>
       </AuxValues>
     </Component>

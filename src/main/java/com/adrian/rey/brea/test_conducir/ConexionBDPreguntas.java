@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  */
 public class ConexionBDPreguntas {
     ArrayList<Pregunta> preguntas;
-    public ConexionBDPreguntas(File file, boolean online) throws ClassNotFoundException, SQLException{
+    public ConexionBDPreguntas(File file, boolean online) throws ClassNotFoundException, SQLException, com.mysql.cj.jdbc.exceptions.CommunicationsException{
         preguntas = new ArrayList<>();
         Connection cn;
         Statement st;
@@ -30,9 +30,10 @@ public class ConexionBDPreguntas {
             st = cn.createStatement();
         }
         else{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            cn = DriverManager.getConnection("jdbc:mysql://remotemysql.com/OvRJMSSbYJ", "OvRJMSSbYJ", "xqCGH8DwF1");
-            st = cn.createStatement();
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                cn = DriverManager.getConnection("jdbc:mysql://remotemysql.com/OvRJMSSbYJ", "OvRJMSSbYJ", "xqCGH8DwF1");
+                st = cn.createStatement();
+            
         }
         ResultSet rs = st.executeQuery("SELECT pregunta, enlace, id_pregunta from preguntas");
         while(rs.next()){
