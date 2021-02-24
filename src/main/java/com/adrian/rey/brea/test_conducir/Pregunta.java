@@ -7,6 +7,7 @@ package com.adrian.rey.brea.test_conducir;
 
 import java.awt.Image;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.imageio.ImageIO;
@@ -17,8 +18,8 @@ import javax.imageio.ImageIO;
  * y la imagen del proyecto
  * @author adrir
  */
-public class Pregunta {
-    private Image img;
+public class Pregunta implements Serializable{
+    private String enlaceImg;
     private String pregunta;
     private Respuesta r1;
     private Respuesta r2;
@@ -27,39 +28,31 @@ public class Pregunta {
     private int respuestaMarcada;
     public Pregunta() {}
 
-    public Pregunta(Image img, String pregunta, Respuesta r1, Respuesta r2, Respuesta r3, Respuesta r4) {
+    
+    
+    public Pregunta(String enlaceImg, String pregunta, Respuesta r1, Respuesta r2, Respuesta r3, Respuesta r4){
         respuestaMarcada = -1;
-        this.img = img;
+        this.enlaceImg = enlaceImg;
         this.pregunta = pregunta;
         this.r1 = r1;
         this.r2 = r2;
         this.r3 = r3;
         this.r4 = r4;
     }
-    public Pregunta(String enlaceImg, String pregunta, Respuesta r1, Respuesta r2, Respuesta r3, Respuesta r4) throws MalformedURLException, IOException {
-        respuestaMarcada = -1;
-        URL url = new URL(enlaceImg);
-        img = java.awt.Toolkit.getDefaultToolkit().createImage(url);;
-        this.img = img;
+    
+    public Pregunta(int respuestaMarcada, String enlaceImg, String pregunta, Respuesta r1, Respuesta r2, Respuesta r3, Respuesta r4) throws MalformedURLException, IOException {
+        this.respuestaMarcada = respuestaMarcada;
+        this.enlaceImg = enlaceImg;
         this.pregunta = pregunta;
         this.r1 = r1;
         this.r2 = r2;
         this.r3 = r3;
         this.r4 = r4;
-    }
-    public Pregunta(Image img, String pregunta, Respuesta[] respuestas) {
-        respuestaMarcada = -1;
-        this.img = img;
-        this.pregunta = pregunta;
-        r1 = respuestas[0];
-        r2 = respuestas[1];
-        r3 = respuestas[2];
-        r4 = respuestas[3];
     }
     
     @Override
     public String toString() {
-        return "Pregunta{" + "img=" + img + ", pregunta=" + pregunta + ", r1=" + r1 + ", r2=" + r2 + ", r3=" + r3 + ", r4=" + r4 + '}';
+        return "Pregunta{" + "img=" + enlaceImg + ", pregunta=" + pregunta + ", r1=" + r1 + ", r2=" + r2 + ", r3=" + r3 + ", r4=" + r4 + '}';
     }
 
     
@@ -89,9 +82,11 @@ public class Pregunta {
     public Respuesta getR4() {
         return r4;
     }
-    public Image getImg() {
-        return img;
+    
+    public String getEnlaceImg() {
+        return enlaceImg;
     }
+    
     public int getRespuestaMarcada() {
         return respuestaMarcada;
     }
@@ -119,10 +114,12 @@ public class Pregunta {
     public void setR4(Respuesta r4) {
         this.r4 = r4;
     }
-    
-    public void setImg(Image img) {
-        this.img = img;
+
+    public void setEnlaceImg(String enlaceImg) {
+        this.enlaceImg = enlaceImg;
     }
+    
+    
     public void setRespuestaMarcada(int respuestaMarcada) {
         this.respuestaMarcada = respuestaMarcada;
     }

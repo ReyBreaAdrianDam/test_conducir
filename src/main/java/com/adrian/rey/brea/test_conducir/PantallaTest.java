@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 package com.adrian.rey.brea.test_conducir;
+import java.awt.Image;
 import java.io.File;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,9 +29,11 @@ public class PantallaTest extends javax.swing.JFrame {
      * Creates new form Pantalla_principal
      * @param ficheroTest
      * @param online
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
      */
     
-    public PantallaTest(File ficheroTest, boolean online) throws com.mysql.cj.jdbc.exceptions.CommunicationsException, SQLException , ClassNotFoundException {
+    public PantallaTest(File ficheroTest, boolean online) throws SQLException , ClassNotFoundException {
         this.online = online;
         godMode = false;
         this.ficheroTest = ficheroTest;
@@ -48,7 +52,15 @@ public class PantallaTest extends javax.swing.JFrame {
         labelPreguntasResp.setText("Pregunta: " + (num + 1) + "/" + preguntas.size());
         //Nueva pregunta
         preguntaActual = preguntas.get(num);
-        imageIcon = new ImageIcon(preguntaActual.getImg());
+        
+        try{
+            URL url = new URL(preguntaActual.getEnlaceImg());
+            Image img = java.awt.Toolkit.getDefaultToolkit().createImage(url);
+            imageIcon = new ImageIcon(img);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
         imagenLabel.setIcon(imageIcon);
         preguntaLabel.setText("<html>"+preguntaActual.getPregunta()+"</html>");
         opcionA.setText("<html>"+preguntaActual.getR1().getRespuesta()+"</html>");
@@ -99,46 +111,15 @@ public class PantallaTest extends javax.swing.JFrame {
         Collections.shuffle(preguntas);
     }
     public void mostrarResultados(){
-        this.dispose();
-        PantallaResultados pr = new PantallaResultados(preguntas);
+        String examen;
+        if(online)
+            examen = "Online";
+        else
+            examen = ficheroTest.getName();
+        PantallaResultados pr = new PantallaResultados(preguntas, examen);
         pr.setVisible(true);
-        int respuestas_bien = 0;
-        int nPregunta = 1;
-        for(Pregunta pregunta: preguntas){
-            System.out.println("\n" + nPregunta + "º " + (pregunta.getPregunta()));
-            Respuesta rMarcada = null;
-            switch(pregunta.getRespuestaMarcada()){
-                case 1:
-                    if(pregunta.getR1().isCorrecta())
-                        respuestas_bien++;
-                    rMarcada = pregunta.getR1();
-                    break;
-                case 2:
-                    if(pregunta.getR2().isCorrecta())
-                        respuestas_bien++;
-                    rMarcada = pregunta.getR2();
-                    break;
-                case 3:
-                    if(pregunta.getR3().isCorrecta())
-                        respuestas_bien++;
-                    rMarcada = pregunta.getR3();
-                    break;
-                case 4:
-                    if(pregunta.getR4().isCorrecta())
-                        respuestas_bien++;
-                    rMarcada = pregunta.getR4();
-                    break;
-                default:
-                    rMarcada = new Respuesta("No has marcado nada", false);
-            }
-            System.out.println(rMarcada.getRespuesta());
-            if(rMarcada.isCorrecta())
-                System.out.println("la acertaste");
-            else
-                System.out.println("la fallaste");
-            nPregunta++;
-        }
-        System.out.println(respuestas_bien);
+        this.dispose();
+        
         
     }
     
@@ -464,29 +445,7 @@ public class PantallaTest extends javax.swing.JFrame {
         
     }//GEN-LAST:event_opcionDStateChanged
 
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]){
-//        
-//       
-//        try {
-//            UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubContrastIJTheme());
-//            //</editor-fold>
-//        } catch (UnsupportedLookAndFeelException ex) {
-//            Logger.getLogger(Pantalla_principal.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
-//        
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                new Pantalla_principal().setVisible(true);
-//            }
-//        });
-//    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton anterior;

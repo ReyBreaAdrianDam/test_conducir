@@ -5,11 +5,13 @@
  */
 package com.adrian.rey.brea.test_conducir;
 
+import java.io.Serializable;
+
 /**
  * Esta clase genera una respuesta, que puede ser verdadera o falsa
  * @author adrir
  */
-class Respuesta {
+class Respuesta implements Serializable{
     private String respuesta;
     private boolean correcta;
     public Respuesta(){

@@ -19,80 +19,77 @@ import java.util.logging.Logger;
  * @author adrir
  */
 public class ConexionBDPreguntas {
+
     ArrayList<Pregunta> preguntas;
-    public ConexionBDPreguntas(File file, boolean online) throws ClassNotFoundException, SQLException, com.mysql.cj.jdbc.exceptions.CommunicationsException{
+
+    public ConexionBDPreguntas(File file, boolean online) throws ClassNotFoundException, SQLException, com.mysql.cj.jdbc.exceptions.CommunicationsException {
         preguntas = new ArrayList<>();
         Connection cn;
         Statement st;
-        if(!online){
+        if (!online) {
             Class.forName("org.sqlite.JDBC");
             cn = DriverManager.getConnection("jdbc:sqlite:" + file.getAbsolutePath(), "", "");
             st = cn.createStatement();
-        }
-        else{
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                cn = DriverManager.getConnection("jdbc:mysql://remotemysql.com/OvRJMSSbYJ", "OvRJMSSbYJ", "xqCGH8DwF1");
-                st = cn.createStatement();
-            
+        } else {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            cn = DriverManager.getConnection("jdbc:mysql://remotemysql.com/OvRJMSSbYJ", "OvRJMSSbYJ", "xqCGH8DwF1");
+            st = cn.createStatement();
+
         }
         ResultSet rs = st.executeQuery("SELECT pregunta, enlace, id_pregunta from preguntas");
-        while(rs.next()){
+        while (rs.next()) {
             String pregunta = rs.getString(1);
             String enlace = rs.getString(2);
-            try {
-                preguntas.add(new Pregunta(enlace, pregunta, null, null, null, null));
-            } catch (IOException ex) {
-                Logger.getLogger(ConexionBDPreguntas.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            preguntas.add(new Pregunta(enlace, pregunta, null, null, null, null));
+             
         }
-        
-        for (Pregunta pregunta : preguntas){
+
+        for (Pregunta pregunta : preguntas) {
             ArrayList<Respuesta> respuestas = new ArrayList<>();
             String preg = pregunta.getPregunta();
             rs = st.executeQuery("SELECT respuesta, verdadera from preguntas,"
                     + " respuestas where preguntas.id_pregunta = respuestas.id_pregunta and preguntas.pregunta = '" + preg + "'");
-            while(rs.next()){
+            while (rs.next()) {
                 respuestas.add(new Respuesta(rs.getString(1), rs.getBoolean(2)));
             }
             Collections.shuffle(respuestas);
-            try{
+            try {
                 pregunta.setR1(respuestas.get(0));
                 pregunta.setR2(respuestas.get(1));
                 pregunta.setR3(respuestas.get(2));
                 pregunta.setR4(respuestas.get(3));
+            } catch (IndexOutOfBoundsException ex) {
+                int numerorespuesta = st.executeQuery("select count(*) from respuestas").getInt(1);
+                int numeropregunta = st.executeQuery(
+                        "select preguntas.id_pregunta from preguntas, respuestas"
+                        + " where preguntas.id_pregunta = respuestas.id_pregunta"
+                        + " group by preguntas.id_pregunta order by preguntas.id_pregunta desc limit 1").getInt(1) + 1;
+                System.out.println("Si estas aqui es porque la pregunta nº " + numeropregunta
+                        + " :" + pregunta.getPregunta() + " no tiene respuestas");
+
+                Scanner sc = new Scanner(System.in);
+
+                for (int i = 1; i <= 4; i++) {
+                    numerorespuesta++;
+                    System.out.print("Introduce la respuesta: " + numerorespuesta + " >> ");
+                    String respuesta = sc.nextLine();
+                    System.out.print("¿Es verdadera? >> ");
+                    Boolean verdadera = Boolean.parseBoolean(sc.nextLine());
+                    st.execute(String.format("INSERT INTO respuestas values(%d, '%s', %b, %d)", numerorespuesta, respuesta, verdadera, numeropregunta));
+
+                }
+                pregunta.setR1(new Respuesta("true", true));
+                pregunta.setR2(new Respuesta("false", false));
+                pregunta.setR3(new Respuesta("false", false));
+                pregunta.setR4(new Respuesta("false", false));
             }
-            catch(IndexOutOfBoundsException ex){
-//                int numerorespuesta = st.executeQuery("select count(*) from respuestas").getInt(1);
-//                int numeropregunta = st.executeQuery(
-//                        "select preguntas.id_pregunta from preguntas, respuestas"
-//                        + " where preguntas.id_pregunta = respuestas.id_pregunta"
-//                        + " group by preguntas.id_pregunta order by preguntas.id_pregunta desc limit 1").getInt(1) + 1;
-//                System.out.println("Si estas aqui es porque la pregunta nº " + numeropregunta +
-//                       " :" + pregunta.getPregunta() + " no tiene respuestas");
-//                
-//                Scanner sc = new Scanner(System.in);
-//                
-//                for(int i = 1; i <= 4; i++){
-//                    numerorespuesta++;
-//                    System.out.print("Introduce la respuesta: " + numerorespuesta + " >> ");
-//                    String respuesta = sc.nextLine();
-//                    System.out.print("¿Es verdadera? >> ");
-//                    Boolean verdadera = Boolean.parseBoolean(sc.nextLine());
-//                    st.execute(String.format("INSERT INTO respuestas values(%d, '%s', %b, %d)", numerorespuesta, respuesta, verdadera, numeropregunta));
-//                    
-//                }
-//                pregunta.setR1(new Respuesta("true", true));
-//                pregunta.setR2(new Respuesta("false", false));
-//                pregunta.setR3(new Respuesta("false", false));
-//                pregunta.setR4(new Respuesta("false", false));
-            }
-            
+
         }
         rs.close();
         st.close();
         cn.close();
     }
-    
+
     public ArrayList<Pregunta> getPreguntas() {
         return preguntas;
     }
@@ -101,4 +98,3 @@ public class ConexionBDPreguntas {
         this.preguntas = preguntas;
     }
 }
-

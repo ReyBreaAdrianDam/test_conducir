@@ -6,6 +6,7 @@
 package com.adrian.rey.brea.test_conducir;
 
 import java.awt.Image;
+import java.net.URL;
 import javax.swing.ImageIcon;
 
 /**
@@ -20,11 +21,18 @@ public class PreguntaRespondida extends javax.swing.JPanel {
      */
     public PreguntaRespondida(Pregunta pregunta) {
         initComponents();
+        try{
+            URL url = new URL(pregunta.getEnlaceImg());
+            Image img = java.awt.Toolkit.getDefaultToolkit().createImage(url);
+            Image preguntaImg = img.getScaledInstance(145, 100, Image.SCALE_SMOOTH);
+            imagenLabel.setIcon(new ImageIcon(preguntaImg));
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
         
-        Image preguntaImg = pregunta.getImg().getScaledInstance(145, 100, Image.SCALE_SMOOTH);
         
-        imagenLabel.setIcon(new ImageIcon(preguntaImg));
-        
+       
         preguntaLabel.setText("<html>" + pregunta.getPregunta() + "</html>");
         switch(pregunta.getRespuestaMarcada()){
             case 1:
