@@ -13,11 +13,11 @@ import java.util.Collections;
 import javax.swing.*;
 
 /**
- *
+ * Clase PantallaTest, que genera un test usable
  * @author adrir
  */
 public class PantallaTest extends javax.swing.JFrame {
-    ImageIcon imageIcon;
+    ImageIcon imageIconPregunta;
     ArrayList<Pregunta> preguntas;
     int numeroPregunta = 0;
     Pregunta preguntaActual;
@@ -25,27 +25,32 @@ public class PantallaTest extends javax.swing.JFrame {
     boolean online;
     boolean godMode;
     int intentosSalida = 0;
+    Image iconoApp;
     /**
      * Creates new form Pantalla_principal
-     * @param ficheroTest
-     * @param online
+     * @param ficheroTest si tiene un fichero quiere decir que es offline
+     * @param online si es online lo carga online
      * @throws java.sql.SQLException
      * @throws java.lang.ClassNotFoundException
      */
     
-    public PantallaTest(File ficheroTest, boolean online) throws SQLException , ClassNotFoundException {
+    public PantallaTest(File ficheroTest, boolean online, Image iconoApp) throws SQLException , ClassNotFoundException {
         this.online = online;
         godMode = false;
+        this.iconoApp = iconoApp;
         this.ficheroTest = ficheroTest;
         preguntas = new ArrayList<>();
         generarPreguntas();
         initComponents();
         mostrarPregunta(numeroPregunta);
-        this.dispose();
         //this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         //this.setUndecorated(true);
         this.setVisible(true);
     }
+    /**
+     * Clase que muestra las preguntas
+     * @param num 
+     */
     public void mostrarPregunta(int num){
         preguntaPanel.setVisible(false);
         anterior.setEnabled(true);
@@ -56,12 +61,12 @@ public class PantallaTest extends javax.swing.JFrame {
         try{
             URL url = new URL(preguntaActual.getEnlaceImg());
             Image img = java.awt.Toolkit.getDefaultToolkit().createImage(url);
-            imageIcon = new ImageIcon(img);
+            imageIconPregunta = new ImageIcon(img);
         }
         catch(Exception ex){
             ex.printStackTrace();
         }
-        imagenLabel.setIcon(imageIcon);
+        imagenLabel.setIcon(imageIconPregunta);
         preguntaLabel.setText("<html>"+preguntaActual.getPregunta()+"</html>");
         opcionA.setText("<html>"+preguntaActual.getR1().getRespuesta()+"</html>");
         opcionB.setText("<html>"+preguntaActual.getR2().getRespuesta()+"</html>");
@@ -94,6 +99,10 @@ public class PantallaTest extends javax.swing.JFrame {
         else siguiente.setText("Siguiente");
         preguntaPanel.setVisible(true);
     }
+    
+    /**
+     * Metodo que te pone en modo dios
+     */
     public void godMode(){
         if(preguntaActual.getR1().isCorrecta())
             opcionA.setSelected(true);
@@ -104,19 +113,31 @@ public class PantallaTest extends javax.swing.JFrame {
         else if(preguntaActual.getR4().isCorrecta())
             opcionD.setSelected(true);
     }
+    
+    /**
+     * Metodo que genera las preguntas pertinentes sacadas de bases de datos
+     * @throws com.mysql.cj.jdbc.exceptions.CommunicationsException
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
     public void generarPreguntas() throws com.mysql.cj.jdbc.exceptions.CommunicationsException, SQLException , ClassNotFoundException{
         
         ConexionBDPreguntas gen = new ConexionBDPreguntas(ficheroTest, online);
         preguntas = gen.getPreguntas();
         Collections.shuffle(preguntas);
     }
+    
+    /**
+     * Metodo que se llama al salir del test.
+     * Muestra los resultados
+     */
     public void mostrarResultados(){
         String examen;
         if(online)
             examen = "Online";
         else
             examen = ficheroTest.getName();
-        PantallaResultados pr = new PantallaResultados(preguntas, examen);
+        PantallaResultados pr = new PantallaResultados(preguntas, examen, iconoApp);
         pr.setVisible(true);
         this.dispose();
         
@@ -139,7 +160,7 @@ public class PantallaTest extends javax.swing.JFrame {
         confirmarSalida = new javax.swing.JButton();
         rechazarSalida = new javax.swing.JButton();
         preguntaPanel = new javax.swing.JPanel();
-        imagenLabel = new javax.swing.JLabel(imageIcon);
+        imagenLabel = new javax.swing.JLabel(imageIconPregunta);
         preguntaLabel = new javax.swing.JLabel();
         respuestasPanel = new javax.swing.JPanel();
         opcionA = new javax.swing.JRadioButton();
@@ -207,6 +228,7 @@ public class PantallaTest extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Test conducción");
+        setIconImage(iconoApp);
         setMinimumSize(new java.awt.Dimension(1600, 900));
 
         imagenLabel.setBounds(30,30,100,100);
@@ -328,6 +350,7 @@ public class PantallaTest extends javax.swing.JFrame {
         });
 
         labelPreguntasResp.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        labelPreguntasResp.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelPreguntasResp.setText("Pregunta: 0/30");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

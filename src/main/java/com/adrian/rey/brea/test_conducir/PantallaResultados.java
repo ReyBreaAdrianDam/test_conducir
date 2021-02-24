@@ -5,8 +5,12 @@
  */
 package com.adrian.rey.brea.test_conducir;
 
+import com.sun.tools.javac.Main;
 import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.*;
+import java.net.URL;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -20,24 +24,68 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author adrir
  */
 public class PantallaResultados extends javax.swing.JFrame {
+
     ArrayList<Pregunta> preguntas;
     ArrayList<Pregunta> preguntasTestActual;
     String fichero;
+    Image iconoApp;
     /**
-     * Creates new form PantallaResultados
+     * Constructor cuando acabas el test
+     *
      * @param preguntas
      * @param fichero
      */
-    public PantallaResultados(ArrayList<Pregunta> preguntas, String fichero) {
+    public PantallaResultados(ArrayList<Pregunta> preguntas, String fichero, Image iconoApp) {
+        this.iconoApp = iconoApp;
         LocalDateTime actual = LocalDateTime.now();
-        this.fichero = fichero + "-" + actual.getHour()  + actual.getMinute() + actual.getSecond() + actual.getDayOfMonth()+ actual.getMonthValue() + actual.getYear() +".fdt" ;
+        this.fichero = fichero + "-" + actual.getHour() + actual.getMinute() + actual.getSecond() + actual.getDayOfMonth() + actual.getMonthValue() + actual.getYear() + ".fdt";
         this.setTitle("Resultados");
         this.preguntas = preguntas;
         preguntasTestActual = preguntas;
         initComponents();
         jTabbedPane1.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         generarPanel();
+
+    }
+    /**
+     * Constructor cuando se llama desde la pantalla principal
+     * @param file
+     * @param iconoApp 
+     */
+    public PantallaResultados(File file, Image iconoApp) {
         
+        this.setTitle("Resultados");
+        this.iconoApp = iconoApp;
+        ObjectInputStream ois = null;
+        initComponents();
+        try {
+            guardarTest.setEnabled(false);
+            menuOpciones.remove(guardarTest);
+            ois = new ObjectInputStream(new FileInputStream(file));
+            preguntas = new ArrayList<>();
+            Pregunta pregunta;
+            try {
+                while ((pregunta = (Pregunta) ois.readObject()) != null) {
+                    preguntas.add(pregunta);
+                }
+            } catch (java.io.EOFException ex) {
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(PantallaResultados.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ois.close();
+            jTabbedPane1.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+            generarPanel();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PantallaResultados.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(PantallaResultados.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                ois.close();
+            } catch (IOException ex) {
+                Logger.getLogger(PantallaResultados.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     /**
@@ -62,6 +110,7 @@ public class PantallaResultados extends javax.swing.JFrame {
         menuSalir = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImage(iconoApp);
         setResizable(false);
 
         respuestas.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -148,37 +197,46 @@ public class PantallaResultados extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+    
+    /**
+     * Metodo para generar generar el panel tabulado de las preguntas
+     */
     private void generarPanel() {
         int acertadas = 0;
         jTabbedPane1.removeAll();
-        for(int i = 0; i < preguntas.size(); i++){
-            jTabbedPane1.add("Pregunta " + (i + 1),new PreguntaRespondida(preguntas.get(i)));
-            switch(preguntas.get(i).getRespuestaMarcada()){
+        for (int i = 0; i < preguntas.size(); i++) {
+            jTabbedPane1.add("Pregunta " + (i + 1), new PreguntaRespondida(preguntas.get(i)));
+            switch (preguntas.get(i).getRespuestaMarcada()) {
                 case 1:
-                    if(preguntas.get(i).getR1().isCorrecta())
+                    if (preguntas.get(i).getR1().isCorrecta()) {
                         acertadas++;
+                    }
                     break;
                 case 2:
-                    if(preguntas.get(i).getR2().isCorrecta())
+                    if (preguntas.get(i).getR2().isCorrecta()) {
                         acertadas++;
+                    }
                     break;
                 case 3:
-                    if(preguntas.get(i).getR3().isCorrecta())
+                    if (preguntas.get(i).getR3().isCorrecta()) {
                         acertadas++;
+                    }
                     break;
                 case 4:
-                    if(preguntas.get(i).getR4().isCorrecta())
+                    if (preguntas.get(i).getR4().isCorrecta()) {
                         acertadas++;
+                    }
                     break;
             }
         }
-        
-        if(acertadas >= preguntas.size() - (preguntas.size() / 10))
-            acertadasLabel.setText(acertadas + "/" + preguntas.size() +  " APROBADO");
-        else
-            acertadasLabel.setText(acertadas + "/" + preguntas.size() +  " SUSPENSO");
+
+        if (acertadas >= preguntas.size() - (preguntas.size() / 10)) {
+            acertadasLabel.setText(acertadas + "/" + preguntas.size() + " APROBADO");
+        } else {
+            acertadasLabel.setText(acertadas + "/" + preguntas.size() + " SUSPENSO");
+        }
     }
-    
+
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
@@ -193,8 +251,9 @@ public class PantallaResultados extends javax.swing.JFrame {
             File file = new File(fichero);
             oos = new ObjectOutputStream(new FileOutputStream(file));
             System.out.println(fichero);
-            for(Pregunta pregunta : preguntasTestActual)
+            for (Pregunta pregunta : preguntasTestActual) {
                 oos.writeObject(pregunta);
+            }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PantallaResultados.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -218,11 +277,11 @@ public class PantallaResultados extends javax.swing.JFrame {
                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
                 preguntas = new ArrayList<>();
                 Pregunta pregunta;
-                try{
-                    while((pregunta = (Pregunta)ois.readObject()) != null)
+                try {
+                    while ((pregunta = (Pregunta) ois.readObject()) != null) {
                         preguntas.add(pregunta);
-                }
-                catch(java.io.EOFException ex){
+                    }
+                } catch (java.io.EOFException ex) {
                 }
                 ois.close();
                 generarPanel();
@@ -241,7 +300,6 @@ public class PantallaResultados extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem abrir;
@@ -257,5 +315,4 @@ public class PantallaResultados extends javax.swing.JFrame {
     private javax.swing.JButton salir;
     // End of variables declaration//GEN-END:variables
 
-    
 }

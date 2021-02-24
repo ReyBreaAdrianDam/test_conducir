@@ -5,12 +5,9 @@
  */
 package com.adrian.rey.brea.test_conducir;
 
-import java.awt.Image;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
-import java.net.URL;
-import javax.imageio.ImageIO;
 
 /**
  * Clase pregunta requiere de un parametro String pregunta

@@ -4,8 +4,11 @@
  * and open the template in the editor.
  */
 package com.adrian.rey.brea.test_conducir;
+
+import com.sun.tools.javac.Main;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
@@ -21,17 +24,22 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author adrir
  */
 public class PantallaPrincipal extends javax.swing.JFrame {
+
     private boolean oscuro;
+    Image iconoApp;
+
     /**
      * Creates new form PantallaPrincipal
      */
     public PantallaPrincipal() {
         oscuro = false;
+        this.iconoApp = getIconImage();
         initComponents();
     }
 
@@ -48,8 +56,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         salir = new javax.swing.JButton();
         testOnline = new javax.swing.JButton();
         modoOscuro = new javax.swing.JButton();
+        verOtros = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImage(iconoApp);
         setUndecorated(true);
         setResizable(false);
 
@@ -102,24 +112,29 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        verOtros.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        verOtros.setText("Ver Tests anteriores");
+        verOtros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verOtrosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(200, 200, 200)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(salir)
-                            .addComponent(elegirBBDD, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 194, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(testOnline)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(modoOscuro)))
-                .addContainerGap())
+                .addGap(200, 200, 200)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(salir)
+                    .addComponent(elegirBBDD, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(200, 200, 200))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(testOnline)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(modoOscuro))
+            .addComponent(verOtros, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {elegirBBDD, salir});
@@ -127,15 +142,15 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(testOnline)
                     .addComponent(modoOscuro))
-                .addGap(110, 110, 110)
+                .addGap(116, 116, 116)
                 .addComponent(elegirBBDD, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(salir, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(130, Short.MAX_VALUE))
+                .addGap(116, 116, 116)
+                .addComponent(verOtros))
         );
 
         try{
@@ -151,7 +166,17 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    /**
+     * Metodo que devuelve el icono de la aplicación, cada constructor de jframes requiere del icono, sacado de esta clase
+     * @return 
+     */
+    @Override
+    public Image getIconImage() {
+        URL imageResource = Main.class.getClassLoader().getResource("icono.png");
+        Image retValue = Toolkit.getDefaultToolkit().getImage(imageResource);
+        return retValue;
+    }
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
@@ -167,66 +192,79 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
         } catch (HeadlessException ex) {
             System.out.println("Revisa la conexion a internet");
-        } 
-          
+        }
+
     }//GEN-LAST:event_elegirBBDDActionPerformed
 
     private void testOnlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testOnlineActionPerformed
         File fil = null;
         lanzarTest(fil, true);
-         
+
     }//GEN-LAST:event_testOnlineActionPerformed
-    public void modoOscuro(){
+    /**
+     * Pone la aplicación en modo oscuro, ideal para tus ojitos por la noche
+     */
+    public void modoOscuro() {
         oscuro = !oscuro;
         try {
-            if(oscuro){
+            if (oscuro) {
                 UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme());
-            }
-            else{
+            } else {
                 UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.FlatArcDarkOrangeIJTheme());
             }
             SwingUtilities.updateComponentTreeUI(this);
         } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     private void modoOscuroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoOscuroActionPerformed
         modoOscuro();
     }//GEN-LAST:event_modoOscuroActionPerformed
-    public void lanzarTest(File file, boolean online){
+
+    private void verOtrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verOtrosActionPerformed
+        JFileChooser fc = new JFileChooser();
         JFrame.setDefaultLookAndFeelDecorated(true);
-        try{
-            PantallaTest test = new PantallaTest(file, online);
-            test.setVisible(true);
+        fc.setFileFilter(new FileNameExtensionFilter("Fin de test *.fdt", "fdt"));
+        int returnVal = fc.showOpenDialog(PantallaPrincipal.this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            PantallaResultados pr = new PantallaResultados(file, iconoApp);
+            pr.setVisible(true);
             this.dispose();
         }
-        catch(SQLException ex){
+    }//GEN-LAST:event_verOtrosActionPerformed
+    
+    /**
+     * Metodo que lanza el test
+     * @param file si tiene fichero es offline
+     * @param online si esta online, conecta a una base de datos
+     */
+    public void lanzarTest(File file, boolean online) {
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        try {
+            PantallaTest test = new PantallaTest(file, online, iconoApp);
+            test.setVisible(true);
+            this.dispose();
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "No se puede acceder a la base de datos. Quizas esten los puertos cerrados", "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-    }
-    public PantallaPrincipal(JButton elegirBBDD, JButton salir, JButton testOnline)throws ExceptionInInitializerError{
-        this.elegirBBDD = elegirBBDD;
-        this.salir = salir;
-        this.testOnline = testOnline;
+
     }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 PantallaPrincipal pantallaPrincipal = new PantallaPrincipal();
                 pantallaPrincipal.setVisible(true);
                 pantallaPrincipal.modoOscuro();
-                
+
             }
         });
     }
@@ -236,5 +274,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton modoOscuro;
     private javax.swing.JButton salir;
     private javax.swing.JButton testOnline;
+    private javax.swing.JButton verOtros;
     // End of variables declaration//GEN-END:variables
 }
