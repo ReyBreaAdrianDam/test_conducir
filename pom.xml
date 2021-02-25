@@ -19,16 +19,6 @@
             <version>3.34.0</version>
         </dependency>
         <dependency>
-            <groupId>FlatLaf</groupId>
-            <artifactId>FlatLaf</artifactId>
-            <version>alguna</version>
-        </dependency>
-        <dependency>
-            <groupId>FlatLafIJ</groupId>
-            <artifactId>FlatLafIJ</artifactId>
-            <version>alguna</version>
-        </dependency>
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.23</version>
@@ -38,6 +28,16 @@
                     <artifactId>protobuf-java</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>1.0-rc3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-intellij-themes</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
     <properties>
