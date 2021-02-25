@@ -1,5 +1,5 @@
 # Test de conducir
-[![](https://static.oprah.com/2017/08/released-logo-header-310x120.png)](https://nodesource.com/products/nsolid)
+[![](https://static.oprah.com/2017/08/released-logo-header-310x120.png)](https://github.com/ReyBreaAdrianDam/test_conducir/releases/tag/1.0)
 
 ![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)
 
