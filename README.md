@@ -1,3 +1,5 @@
+AVISO: INSTALAR LAS DEPENDENCIAS FLATLAF y FLATLAF-INTELLIJ
+
 # Test de conducir
 [![](https://static.oprah.com/2017/08/released-logo-header-310x120.png)](https://github.com/ReyBreaAdrianDam/test_conducir/releases/tag/1.0)
 
