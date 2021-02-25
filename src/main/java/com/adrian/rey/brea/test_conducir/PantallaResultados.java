@@ -248,7 +248,10 @@ public class PantallaResultados extends javax.swing.JFrame {
     private void guardarTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarTestActionPerformed
         ObjectOutputStream oos = null;
         try {
-            File file = new File(fichero);
+            File carpeta = new File(System.getProperty("user.home") + "/Documents/tests_realizados");
+            if(!carpeta.exists())
+                carpeta.mkdirs();
+            File file = new File(carpeta + "/" + fichero);
             oos = new ObjectOutputStream(new FileOutputStream(file));
             System.out.println(fichero);
             for (Pregunta pregunta : preguntasTestActual) {
